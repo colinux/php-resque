@@ -110,7 +110,7 @@ class Resque_Redis extends Redisent
 		try {
 			return parent::__call($name, $args[1]);
 		}
-		catch(RedisException $e) {
+		catch(Redisent_Exception $e) {
 			return false;
 		}
 	}

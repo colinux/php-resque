@@ -29,7 +29,7 @@ You use the exact same command names, and the exact same argument order. **How w
     }
     echo "</ul>";
 
-Be aware that Redis error responses will be wrapped in a RedisException class and thrown, so do be sure to use proper coding techniques.
+Be aware that Redis error responses will be wrapped in a Redisent_Exception class and thrown, so do be sure to use proper coding techniques.
 
 ## Clustering your servers
 

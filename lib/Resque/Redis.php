@@ -81,7 +81,7 @@ class Resque_Redis extends Redisent
 	// msetnx
 	// mset
 	// renamenx
-	
+
 	/**
 	 * Set Redis namespace (prefix) default: resque
 	 * @param string $namespace
@@ -93,7 +93,17 @@ class Resque_Redis extends Redisent
 	    }
 	    self::$defaultNamespace = $namespace;
 	}
-	
+
+
+	/**
+	 * Return the current namespace
+	 * @return string
+	 */
+	public static function getPrefix() {
+		return self::$defaultNamespace;
+	}
+
+
 	/**
 	 * Magic method to handle all function requests and prefix key based
 	 * operations with the {self::$defaultNamespace} key prefix.

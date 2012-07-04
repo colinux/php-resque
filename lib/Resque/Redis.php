@@ -90,7 +90,7 @@ else
 				'lset',
 				'lrem',
 				'lpop',
-				'blPop',
+				'blpop',
 				'rpop',
 				'sadd',
 				'srem',
@@ -122,6 +122,7 @@ else
 		// msetnx
 		// mset
 		// renamenx
+
 
 		/**
 		 * Set Redis namespace (prefix) default: resque
@@ -157,7 +158,19 @@ else
 		public function __call($name, $args) {
 			$args = func_get_args();
 			if(in_array($name, $this->keyCommands)) {
-				$args[1][0] = self::$defaultNamespace . $args[1][0];
+				if ($name == 'blpop' && is_array($args[1][0])) {
+					$timeout = $args[1][1];
+
+					foreach ($args[1][0] as $key) {
+						$keys[] = self::$defaultNamespace . $key;
+					}
+
+					$args[1] = $keys;
+					$args[1][] = $timeout;
+				}
+				else {
+					$args[1][0] = self::$defaultNamespace . $args[1][0];
+				}
 			}
 			try {
 				return parent::__call($name, $args[1]);

@@ -129,7 +129,7 @@ class Resque
 			$queues[] = 'queue:' . $queue;
 		}
 
-		$item = self::redis()->blPop($queues, 5);
+		$item = self::redis()->blpop($queues, 5);
 
 		if(!$item) {
 			return;

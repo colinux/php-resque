@@ -7,6 +7,8 @@
  * @package Redisent
  */
 
+namespace redisent;
+
 require_once dirname(__FILE__) . '/Redisent.php';
 
 /**
@@ -64,18 +66,18 @@ class RedisentCluster {
 
 	/**
 	 * Creates a Redisent interface to a cluster of Redis servers
-	 * @param array $servers The Redis servers in the cluster. Each server should be in the format array('host' => hostname, 'port' => port)
+	 * @param array $servers The Redis servers in the cluster. Each server should be in the format array('dsn' => dsn)
 	 */
 	function __construct($servers) {
 		$this->ring = array();
 		$this->aliases = array();
 		foreach ($servers as $alias => $server) {
-			$this->redisents[] = new Redisent($server['host'], $server['port']);
+			$this->redisents[] = new Redis($server['dsn']);
 			if (is_string($alias)) {
 				$this->aliases[$alias] = $this->redisents[count($this->redisents)-1];
 			}
  			for ($replica = 1; $replica <= $this->replicas; $replica++) {
-				$this->ring[crc32($server['host'].':'.$server['port'].'-'.$replica)] = $this->redisents[count($this->redisents)-1];
+				$this->ring[crc32($server['dsn'].$replica)] = $this->redisents[count($this->redisents)-1];
 			}
 		}
 		ksort($this->ring, SORT_NUMERIC);

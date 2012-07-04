@@ -82,15 +82,8 @@ class Resque
 		}
 		else {
 			//echo "connecting to redis: $server\n";
-			if (strpos($server, 'unix:') === false) {
-				list($host, $port) = explode(':', $server);
-			}
-			else {
-				$host = $server;
-				$port = null;
-			}
 			require_once dirname(__FILE__) . '/Resque/Redis.php';
-			self::$redis = new Resque_Redis($host, $port);
+			self::$redis = new Resque_Redis($server);
 		}
 
 		self::$redis->select(self::$redisDatabase);

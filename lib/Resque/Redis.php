@@ -8,10 +8,24 @@ if (class_exists('Redis'))
 	{
 		private static $defaultNamespace = 'resque:';
 
-		public function __construct($host, $port, $timeout = 0)
+		public function __construct($server, $timeout = 0)
 		{
 			parent::__construct();
-			$this->pconnect($host, $port, $timeout);
+			$dsn = parse_url($server);
+
+
+			if (isset($dsn['host'])) {
+				$port = isset($dsn['port']) ? $dsn['port'] : 6379;
+
+				$this->pconnect($dsn['host'], $port, $timeout);
+			}
+			elseif (isset($dsn['path'])) { // socket
+				$this->pconnect($dsn['path'], null, $timeout);
+			}
+			else {
+				throw new Exception ('Invalid dsn "'.$server.'"');
+			}
+
 			$this->setOption(Redis::OPT_PREFIX, self::$defaultNamespace);
 		}
 
@@ -40,7 +54,7 @@ else
 {
 	// Third- party apps may have already loaded Resident from elsewhere
 	// so lets be careful.
-	if(!class_exists('Redisent', false)) {
+	if(!class_exists('redisent\Redis', false)) {
 		require_once dirname(__FILE__) . '/../Redisent/Redisent.php';
 	}
 
@@ -54,7 +68,7 @@ else
 	 * @copyright	(c) 2010 Chris Boulton
 	 * @license		http://www.opensource.org/licenses/mit-license.php
 	 */
-	class RedisApi extends Redisent
+	class RedisApi extends redisent\Redis
 	{
 		/**
 		 * Redis namespace
@@ -175,7 +189,7 @@ else
 			try {
 				return parent::__call($name, $args[1]);
 			}
-			catch(Redisent_Exception $e) {
+			catch(redisent\RedisException $e) {
 				return false;
 			}
 		}

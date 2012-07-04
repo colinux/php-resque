@@ -1,7 +1,7 @@
 <?php
 // Third- party apps may have already loaded Resident from elsewhere
 // so lets be careful.
-if(!class_exists('RedisentCluster', false)) {
+if(!class_exists('redisent\RedisentCluster', false)) {
 	require_once dirname(__FILE__) . '/../Redisent/RedisentCluster.php';
 }
 
@@ -14,7 +14,7 @@ if(!class_exists('RedisentCluster', false)) {
  * @copyright	(c) 2010 Chris Boulton
  * @license		http://www.opensource.org/licenses/mit-license.php
  */
-class Resque_RedisCluster extends RedisentCluster
+class Resque_RedisCluster extends redisent\RedisentCluster
 {
     /**
      * Redis namespace
@@ -123,7 +123,7 @@ class Resque_RedisCluster extends RedisentCluster
 		try {
 			return parent::__call($name, $args[1]);
 		}
-		catch(Redisent_Exception $e) {
+		catch(redisent\RedisException $e) {
 			return false;
 		}
 	}
